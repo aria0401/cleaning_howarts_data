@@ -1,4 +1,8 @@
 "use strict";
 window.addEventListener("load", start);
 
-function start() {}
+function start() {
+  getJsonData();
+}
+
+function getJsonData() {}
