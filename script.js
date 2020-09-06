@@ -26,15 +26,29 @@ async function getJsonData() {
 function getStudentsObject(studensArray) {
   studensArray.forEach((element) => {
     const studens = Object.create(Students);
-    const fullName = element.fullname;
-    const nameLowerCase = fullName.trim().toLowerCase();
-    let capital = nameLowerCase.substring(0, 1).toUpperCase();
-    let name = nameLowerCase.substring(1, nameLowerCase.indexOf(" "));
-    const firstName = `${capital}${name}`;
-    console.log(firstName);
-    console.log(nameLowerCase);
+    const fullName = element.fullname.toLowerCase().trim();
+    // console.log("fullName is:", fullName);
 
-    studens.firstName = firstName;
+    let splitName = fullName.split(" ");
+    if (splitName.length === 2) {
+      let name2 = splitName[1];
+      let lastName =
+        name2[0].toUpperCase() + fullName.substring(fullName.indexOf(" ") + 2);
+      studens.lastName = lastName;
+    } else {
+      let name = fullName.substring(fullName.lastIndexOf(" "));
+      let lastName =
+        name[1].toUpperCase() +
+        fullName.substring(fullName.lastIndexOf(" ") + 2);
+      studens.lastName = lastName.trim();
+    }
+
+    for (let i = 0; i < fullName.length; i++) {
+      let firstName =
+        fullName[0].toUpperCase() +
+        fullName.substring(1, fullName.indexOf(" "));
+      studens.firstName = firstName;
+    }
     studensList.push(studens);
   });
 
