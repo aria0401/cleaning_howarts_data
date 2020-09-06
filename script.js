@@ -1,13 +1,12 @@
 "use strict";
 window.addEventListener("load", start);
 const studensList = [];
-
 const Students = {
   firstName: "",
-  lastName: "",
   middleName: "",
+  lastName: "",
   nickName: "",
-  photoName: "",
+  image: "",
   house: "",
 };
 
@@ -25,35 +24,72 @@ async function getJsonData() {
 
 function getStudentsObject(studensArray) {
   studensArray.forEach((element) => {
-    const studens = Object.create(Students);
+    const students = Object.create(Students);
     const fullName = element.fullname.toLowerCase().trim();
-    // console.log("fullName is:", fullName);
+    console.log("fullName is:", fullName);
+    //for all the firtsNames
+    students.firstName =
+      fullName[0].toUpperCase() + fullName.substring(1, fullName.indexOf(" "));
 
     let splitName = fullName.split(" ");
-    if (splitName.length === 2) {
+    //for firtsNames without lastNames
+    if (splitName.length === 1) {
+      students.firstName = fullName[0].toUpperCase() + fullName.substring(1);
+      students.lastName = "---";
+    } else if (splitName.length === 2) {
+      //for lastNames without middleNames
       let name2 = splitName[1];
       let lastName =
         name2[0].toUpperCase() + fullName.substring(fullName.indexOf(" ") + 2);
-      studens.lastName = lastName;
-    } else {
+      name2[0].toUpperCase() + fullName.substring(fullName.indexOf(" ") + 2);
+      students.lastName = lastName;
+
+      if (lastName.includes("-")) {
+        //for lastNames with hyphen
+        let name = lastName.substring(lastName.indexOf("-") + 1);
+        let hypherName =
+          name[0].toUpperCase() +
+          fullName.substring(fullName.lastIndexOf("-") + 2);
+        students.lastName =
+          lastName.substring(0, lastName.indexOf("-") + 1) + hypherName;
+      }
+    } else if (splitName.length === 3) {
+      //for middleNames
       let name = fullName.substring(fullName.lastIndexOf(" "));
       let lastName =
         name[1].toUpperCase() +
         fullName.substring(fullName.lastIndexOf(" ") + 2);
-      studens.lastName = lastName.trim();
+      let middleName =
+        fullName
+          .substring(fullName.indexOf(" ") + 1, fullName.indexOf(" ") + 2)
+          .toUpperCase() +
+        fullName.substring(
+          fullName.indexOf(" ") + 2,
+          fullName.lastIndexOf(" ")
+        );
+      if (fullName.includes('"')) {
+        let quotations = fullName.substring(
+          fullName.indexOf('"') + 1,
+          fullName.lastIndexOf('"')
+        );
+        students.nickName =
+          quotations[0].toUpperCase() + quotations.substring(1);
+      }
+      students.lastName = lastName;
+      students.middleName = middleName;
+    }
+    //for the house
+    const house = element.house.toLowerCase().trim();
+    students.house = house[0].toUpperCase() + house.substring(1);
+    if (students.lastName != "---") {
+      students.image =
+        students.lastName.toLowerCase() +
+        "_" +
+        students.firstName[0].toLowerCase() +
+        ".png";
     }
 
-    for (let i = 0; i < fullName.length; i++) {
-      let firstName =
-        fullName[0].toUpperCase() +
-        fullName.substring(1, fullName.indexOf(" "));
-      studens.firstName = firstName;
-    }
-    studensList.push(studens);
+    studensList.push(students);
   });
-
   console.table(studensList);
-  orderTheList();
 }
-
-function orderTheList() {}
